@@ -1,0 +1,14 @@
+streamlit
+boto3
+botocore
+requests
+pandas
+python-docx
+reportlab
+PyMuPDF
+Pillow
+python-dotenv
+openai
+langchain-core
+langchain-openai
+schedule
