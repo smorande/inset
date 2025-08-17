@@ -61,6 +61,57 @@ TOKEN_LIMITS = {
     }
 }
 
+import os
+import streamlit as st
+
+def _get_secret(section, key, default=None):
+    # Reads st.secrets[section][key] if present, else env var fallback, else default
+    try:
+        val = st.secrets.get(section, {}).get(key)
+    except Exception:
+        val = None
+    if val is None:
+        val = os.getenv(key, default)
+    return val
+
+# AWS
+aws_access_key = _get_secret("AWS", "AWS_ACCESS_KEY_ID")
+aws_secret_key = _get_secret("AWS", "AWS_SECRET_ACCESS_KEY")
+aws_region     = _get_secret("AWS", "AWS_REGION", "eu-north-1")
+
+if aws_access_key:
+    os.environ["AWS_ACCESS_KEY_ID"] = str(aws_access_key)
+if aws_secret_key:
+    os.environ["AWS_SECRET_ACCESS_KEY"] = str(aws_secret_key)
+if aws_region:
+    os.environ["AWS_DEFAULT_REGION"] = str(aws_region)
+
+# Bedrock API key (only if your code needs a bearer token var)
+bedrock_api_key = _get_secret("Bedrock", "BEDROCK_API_KEY")
+if bedrock_api_key:
+    os.environ["AWS_BEARER_TOKEN_BEDROCK"] = str(bedrock_api_key)  # only set if not None
+
+# LLMs
+openai_key = _get_secret("LLM", "OPENAI_API_KEY")
+if openai_key:
+    os.environ["OPENAI_API_KEY"] = str(openai_key)
+
+pplx_key = _get_secret("LLM", "PERPLEXITY_API_KEY")
+if pplx_key:
+    os.environ["PERPLEXITY_API_KEY"] = str(pplx_key)
+
+# S3 / DynamoDB (optional, only if your code reads envs)
+s3_bucket = _get_secret("S3", "S3_BUCKET")
+if s3_bucket:
+    os.environ["S3_BUCKET"] = str(s3_bucket)
+
+ddb_table = _get_secret("DynamoDB", "DYNAMODB_TABLE")
+chat_table = _get_secret("DynamoDB", "CHAT_HISTORY_TABLE")
+if ddb_table:
+    os.environ["DYNAMODB_TABLE"] = str(ddb_table)
+if chat_table:
+    os.environ["CHAT_HISTORY_TABLE"] = str(chat_table)
+
 # Load environment variables
 load_dotenv()
 
