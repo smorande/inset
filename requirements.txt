@@ -8,7 +8,10 @@ reportlab
 PyMuPDF
 Pillow
 python-dotenv
-openai
-langchain-core
-langchain-openai
+openai>=1.30.0
+langchain-core>=0.2.0
+langchain-openai>=0.1.7
+langgraph>=0.2.30
+typing_extensions>=4.9.0
+pydantic>=2.7.0
 schedule
